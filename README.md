@@ -1,55 +1,44 @@
 # Go MYSQL Dump
 Create MYSQL dumps in Go without the `mysqldump` CLI as a dependancy.
 
+Warning: Fork of a fork...
+
 ### Simple Example
 ```go
-package main
 
-import (
-  "database/sql"
-  "fmt"
+	dump := mysqldump.RegisterDB(db) // Your mysql/maria db connection
+	dump.CharsetName = "utf8mb" // default is "utf8"
 
-  "github.com/jamf/go-mysqldump"
-  "github.com/go-sql-driver/mysql"
-)
 
-func main() {
-  // Open connection to database
-  config := mysql.NewConfig()
-  config.User = "your-user"
-  config.Passwd = "your-pw"
-  config.DBName = "your-db"
-  config.Net = "tcp"
-  config.Addr = "your-hostname:your-port"
+	// dump database to string
+	sql, err := dump.DumpToString()
+	if err != nil {
+		fmt.Println("Error dumping:", err)
+		return
+	}
 
-  dumpDir := "dumps"  // you should create this directory
-  dumpFilenameFormat := fmt.Sprintf("%s-20060102T150405", dbname)   // accepts time layout string and add .sql at the end of file
+	fmt.Println(sql)
 
-  db, err := sql.Open("mysql", config.FormatDNS())
-  if err != nil {
-    fmt.Println("Error opening database: ", err)
-    return
-  }
 
-  // Register database with mysqldump
-  dumper, err := mysqldump.Register(db, dumpDir, dumpFilenameFormat)
-  if err != nil {
-    fmt.Println("Error registering databse:", err)
-    return
-  }
+	// Dump database to file 
+	directory := "assets/backup" // must exist and be writeable by pgm
+	filename := "database-name_" + time.Now().Format("2006-01-_2-150405") // ".sql" will be appended
 
-  // Dump database to file
-  resultFilename, err := dumper.Dump()
-  if err != nil {
-    fmt.Println("Error dumping:", err)
-    return
-  }
-  fmt.Printf("File is saved to %s", resultFilename)
+	err = dump.DumpToFile("assets/backup", filename)
+	if err != nil {
+		fmt.Println("Error dumping:", err)
+		return
+	}
 
-  // Close dumper, connected database and file stream.
-  dumper.Close()
-}
+	fmt.Println("File is saved.")
+
+
+	// Dump database to gzip file 
+	err = dump.DumpToGzip("assets/backup", filename) // ".sql.gz" will be appended
+	if err != nil {
+		fmt.Println("Error dumping:", err)
+		return
+	}
+
+	fmt.Println("File is saved.")
 ```
-
-[![GoDoc](https://godoc.org/github.com/jamf/go-mysqldump?status.svg)](https://godoc.org/github.com/jamf/go-mysqldump)
-[![Build Status](https://travis-ci.org/jamf/go-mysqldump.svg?branch=master)](https://travis-ci.org/jamf/go-mysqldump)
