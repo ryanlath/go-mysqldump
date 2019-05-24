@@ -1,12 +1,12 @@
 # Go MYSQL Dump
-Create MYSQL dumps in Go without the `mysqldump` CLI as a dependancy.
+Create MYSQL dumps in Go without `mysqldump`
 
 Warning: Fork of a fork...
 
-### Simple Example
+### Simple Examples
 ```go
-
-	dump := mysqldump.RegisterDB(db) // Your mysql/maria db connection
+	db := YourMysqlOrMariaDBConnection
+	dump := mysqldump.RegisterDB(db) 
 	dump.CharsetName = "utf8mb" // default is "utf8"
 
 
