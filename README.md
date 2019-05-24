@@ -1,7 +1,7 @@
 # Go MYSQL Dump
 Create MYSQL dumps in Go without `mysqldump`
 
-Warning: Fork of a fork...
+> :warning: Fork of a fork...
 
 ### Simple Examples
 ```go
