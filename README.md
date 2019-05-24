@@ -24,7 +24,7 @@ Create MYSQL dumps in Go without `mysqldump`
 	directory := "assets/backup" // must exist and be writeable by pgm
 	filename := "database-name_" + time.Now().Format("2006-01-_2-150405") // ".sql" will be appended
 
-	err = dump.DumpToFile("assets/backup", filename)
+	err = dump.DumpToFile(directory, filename)
 	if err != nil {
 		fmt.Println("Error dumping:", err)
 		return
@@ -34,7 +34,7 @@ Create MYSQL dumps in Go without `mysqldump`
 
 
 	// Dump database to gzip file 
-	err = dump.DumpToGzip("assets/backup", filename) // ".sql.gz" will be appended
+	err = dump.DumpToGzip(directory, filename) // ".sql.gz" will be appended
 	if err != nil {
 		fmt.Println("Error dumping:", err)
 		return
